@@ -5,6 +5,7 @@ Route::group([
     'namespace' => 'NetborgTeam\P24\Controllers',
     'middleware' => ['web']
 ], function () {
-    Route::get('/status', 'P24ListenerController@getTransactionStatus')->name('getTransactionStatusListener');
-    Route::get('/return/{transaction_id?}', 'P24ListenerController@getReturn')->name('getTransactionReturn');
+    Route::post('/status', 'P24ListenerController@getTransactionStatus')->name('getTransactionStatusListener');
+    Route::get('/return', 'P24ListenerController@getReturn')->name('getTransactionReturn');
+    
 });

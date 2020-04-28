@@ -31,13 +31,13 @@ class P24ListenerController extends Controller
         Log::debug("Raw Request params: ".json_encode($request->all(), JSON_UNESCAPED_UNICODE));
 
         $transactionConfirmation = $manager->parseTransactionConfirmation($request);
-
+        
         Log::debug("Processed Request params [TransactionConfirmation]: ".$transactionConfirmation->toJson(JSON_UNESCAPED_UNICODE));
-
+        
         // check if request comes from valid P24 server
         if (!$manager->isValidSender($request)) {
-            $transactionConfirmation->verification_status = P24TransactionConfirmation::STATUS_INVALID_SENDER_IP;
-            $transactionConfirmation->save();
+                $transactionConfirmation->verification_status = P24TransactionConfirmation::STATUS_INVALID_SENDER_IP;
+                $transactionConfirmation->save();
 
             Log::error('Received P24 Transaction Confirmation from INVALID SENDER!');
 
@@ -120,24 +120,26 @@ class P24ListenerController extends Controller
 
         return new Response();
     }
-
-    public function getReturn($transactionId=null)
+    public function getReturn(Request $request)
     {
+        $transactionId=$request->input("transactionId");
         if ($transactionId) {
             $transaction = P24Transaction::find($transactionId);
 
             if ($transaction instanceof P24Transaction) {
                 event(new P24TransactionUserReturnedEvent($transaction));
             }
+            //include transaction in session so that you can access the details in the return url
+            session()->put('transaction', $transaction);
         }
-
+        
         $redirectTo = '/';
         if ($returnRoute = config('p24.route_return')) {
             $redirectTo = preg_match('/^(http|https):\/\//i', $returnRoute) > 0
                 ? $returnRoute
                 : url(route($returnRoute), [], true);
         }
-
+        
         return redirect($redirectTo);
-    }
+    }   
 }

@@ -337,7 +337,7 @@ class P24Manager
      */
     public function isValidSender(Request $request): bool
     {
-        return in_array($request->getClientIp(), static::$ALLOWED_IPS);
+        return in_array($request->ip(), static::$ALLOWED_IPS);
     }
 
     /**
@@ -372,7 +372,7 @@ class P24Manager
         if ($transaction instanceof P24Transaction) {
             $this->transaction($transaction);
         }
-        
+
         if (count($this->data) == 0) {
             throw new InvalidTransactionException();
         }
@@ -382,7 +382,7 @@ class P24Manager
         if (!isset($this->data['p24_url_return'])) {
             $this->p24_url_return = url(route('getTransactionReturn', ['transactionId' => $transaction->id]), [], true);
         }
-        
+
         if (!isset($this->data['p24_url_status'])) {
             $this->data['p24_url_status'] = url(route('getTransactionStatusListener'), [], true);
         }
@@ -391,11 +391,11 @@ class P24Manager
 
         $client = new Client();
         $response = $client->post($this->endpoint.'/trnRegister', [ "form_params" => $this->data]);
-        
+
         if ($response->getStatusCode() !== 200) {
             throw new P24ConnectionException($response->getReasonPhrase(), $response->getStatusCode());
         }
-        
+
         $response = $this->parseRegistrationResponse($response->getBody()->getContents());
         
         if ($response && count($response) > 0) {
@@ -405,7 +405,7 @@ class P24Manager
                 return $response['fields'];
             }
         }
-        
+
         return false;
     }
 

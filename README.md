@@ -7,7 +7,7 @@ This library is still in early stage of development. Some functionalities may no
 
 ### Requirements ###
 * PHP 7.1.3+
-* Laravel 5.6+
+* Laravel 6.0+
 * PHP modules: php-soap, php-json
 * requires HTTPS
 
