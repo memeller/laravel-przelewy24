@@ -11,6 +11,8 @@ This library is still in early stage of development. Some functionalities may no
 * PHP modules: php-soap, php-json
 * requires HTTPS
 
+@memeller - Updated dependencies for Laravel 7,8 and php 8 (illuminate/support and others are now a part of laravel/framework) - everything seems to be working fine, but I can't guarantee that everything is working fine. Use at your own risk.
+
 ### Installation ###
 ```
 composer require netborg/laravel-przelewy24 "~3.0"
